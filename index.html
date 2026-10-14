@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EstateAI — AI Chatbot for Estate Agents</title>
+  <meta name="description" content="EstateAI is an AI chatbot for estate agents. It replies in under 60 seconds, qualifies every lead and books viewings — 24/7.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="logo-mark" aria-hidden="true">E</span>
+        <span class="brand-name">EstateAI</span>
+        <span class="brand-tag">AI Chatbot for Estate Agents</span>
+      </div>
+      <button class="cta-btn" id="tryDemoBtn" type="button">Try the live demo</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-kicker">AI CHATBOT FOR ESTATE AGENTS</p>
+        <h1>Never Miss Another Enquiry.</h1>
+        <p class="subhead">An AI chatbot on your website that replies in under 60 seconds, qualifies every lead and books viewings — 24/7, even at 2am.</p>
+        <ul class="bullets">
+          <li><span class="tick" aria-hidden="true">&#10003;</span> Replies instantly, day or night</li>
+          <li><span class="tick" aria-hidden="true">&#10003;</span> Books viewings straight into your diary</li>
+        </ul>
+        <button class="cta-btn hero-cta" id="heroDemoBtn" type="button">Try the live demo</button>
+        <p class="hero-note">Tap the gold bubble — the chatbot opens on its own in a few seconds.</p>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stats-inner">
+        <div class="stat">
+          <p class="stat-big">After hours</p>
+          <p class="stat-small">is when most enquiries arrive — while your office is closed</p>
+        </div>
+        <div class="stat">
+          <p class="stat-big">Fastest wins</p>
+          <p class="stat-small">the fastest agent to respond usually wins the instruction</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps">
+      <div class="steps-inner">
+        <h2>How it works</h2>
+        <div class="step-grid">
+          <div class="step">
+            <span class="step-num" aria-hidden="true">1</span>
+            <p>Visitor messages your site</p>
+          </div>
+          <div class="step">
+            <span class="step-num" aria-hidden="true">2</span>
+            <p>AI chatbot replies in 60 seconds &amp; qualifies</p>
+          </div>
+          <div class="step">
+            <span class="step-num" aria-hidden="true">3</span>
+            <p>Viewing booked, you get notified instantly</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Live demo &mdash; EstateAI</p>
+  </footer>
+
+  <!-- Floating chat bubble -->
+  <button class="chat-bubble" id="chatBubble" type="button" aria-label="Open the EstateAI chat demo">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 3h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-5 4V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="9" cy="9.5" r="1.2" fill="currentColor"/>
+      <circle cx="13" cy="9.5" r="1.2" fill="currentColor"/>
+      <circle cx="17" cy="9.5" r="1.2" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <!-- Chat window -->
+  <div class="chat-window" id="chatWindow" aria-hidden="true" role="dialog" aria-label="EstateAI chatbot demo">
+    <div class="chat-header">
+      <span class="agent-avatar" aria-hidden="true">E</span>
+      <div class="agent-info">
+        <p class="agent-name">EstateAI Assistant</p>
+        <p class="agent-status"><span class="online-dot" aria-hidden="true"></span>Online &mdash; replies instantly</p>
+      </div>
+      <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">&times;</button>
+    </div>
+    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+    <div class="chat-faq" id="chatFaq">
+      <button class="faq-chip" type="button" data-faq="fees">What are your fees?</button>
+      <button class="faq-chip" type="button" data-faq="speed">How fast can you sell?</button>
+    </div>
+    <div class="chat-quick" id="chatQuick"></div>
+    <form class="chat-input-row" id="chatForm" autocomplete="off">
+      <input type="text" id="chatInput" placeholder="Type your message&hellip;" aria-label="Type your message" maxlength="500">
+      <button type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 12l18-8-6 18-4-7-8-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
