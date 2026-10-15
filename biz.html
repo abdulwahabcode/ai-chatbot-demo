@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">AI Chatbot Demo</title>
+<meta name="description" content="A free AI chatbot demo for small businesses — replies instantly, captures leads and books jobs 24/7.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1526; --bg2:#111d36; --card:#16233f; --line:rgba(255,255,255,.09);
+  --gold:#f5b942; --gold2:#e09e22; --txt:#f2f5fb; --mut:#a9b6cf;
+  --bubble-bot:#1b2a4a; --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Montserrat',system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(13,21,38,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.brand-name{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-tag{font-size:11px;color:var(--mut);font-weight:500}
+.cta-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;border:0;border-radius:999px;padding:11px 22px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 6px 20px rgba(245,185,66,.25);transition:transform .15s}
+.cta-btn:active{transform:scale(.97)}
+.demo-badge{display:inline-block;background:rgba(245,185,66,.14);border:1px solid rgba(245,185,66,.45);color:var(--gold);font-size:11px;font-weight:700;letter-spacing:.12em;padding:6px 14px;border-radius:999px;margin-bottom:18px}
+.hero{max-width:1080px;margin:0 auto;padding:64px 20px 40px;text-align:center}
+.hero-kicker{font-size:12px;letter-spacing:.22em;color:var(--gold);font-weight:700;margin-bottom:14px}
+.hero h1{font-size:clamp(30px,5.4vw,52px);font-weight:800;line-height:1.12;letter-spacing:-.01em;margin-bottom:16px}
+.hero h1 .hl{color:var(--gold)}
+.subhead{color:var(--mut);font-size:clamp(15px,2.4vw,18px);max-width:640px;margin:0 auto 26px;line-height:1.6}
+.bullets{list-style:none;display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;margin-bottom:30px;color:var(--txt);font-size:14.5px;font-weight:500}
+.tick{color:var(--gold);font-weight:800;margin-right:8px}
+.hero-note{margin-top:16px;color:var(--mut);font-size:13px}
+.stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.stats-inner{max-width:1080px;margin:0 auto;padding:30px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px}
+.stat-big{font-size:20px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.stat-small{color:var(--mut);font-size:14px;line-height:1.55}
+.steps{max-width:1080px;margin:0 auto;padding:46px 20px 70px;text-align:center}
+.steps h2{font-size:24px;font-weight:800;margin-bottom:26px}
+.step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px 18px}
+.step-num{display:inline-flex;width:34px;height:34px;border-radius:50%;background:rgba(245,185,66,.15);color:var(--gold);font-weight:800;align-items:center;justify-content:center;margin-bottom:12px}
+.step p{font-size:14.5px;color:var(--txt);line-height:1.55}
+footer{border-top:1px solid var(--line);text-align:center;padding:22px;color:var(--mut);font-size:13px}
+/* ---- chat widget ---- */
+.chat-bubble{position:fixed;right:20px;bottom:20px;width:62px;height:62px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(245,185,66,.4)}
+.chat-bubble svg{width:30px;height:30px}
+.chat-bubble.pulse{animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,185,66,.5)}70%{box-shadow:0 0 0 16px rgba(245,185,66,0)}100%{box-shadow:0 0 0 0 rgba(245,185,66,0)}}
+.chat-window{position:fixed;right:20px;bottom:94px;width:min(384px,calc(100vw - 40px));height:min(560px,calc(100dvh - 130px));background:#101b33;border:1px solid var(--line);border-radius:22px;z-index:50;display:none;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.chat-window.open{display:flex}
+.chat-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,#16264a,#101b33);border-bottom:1px solid var(--line)}
+.agent-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.agent-name{font-weight:700;font-size:14.5px}
+.agent-status{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px;margin-top:2px}
+.online-dot{width:8px;height:8px;border-radius:50%;background:#3ddc84;display:inline-block}
+.chat-close{margin-left:auto;background:none;border:0;color:var(--mut);font-size:26px;cursor:pointer;line-height:1;padding:4px 8px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:11px 14px;border-radius:16px;font-size:14px;line-height:1.5;animation:pop .25s ease}
+.msg.bot{background:var(--bubble-bot);color:var(--txt);border-bottom-left-radius:6px;align-self:flex-start}
+.msg.user{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;font-weight:600;border-bottom-right-radius:6px;align-self:flex-end}
+.msg.typing{display:flex;gap:5px;padding:14px 16px}
+.msg.typing span{width:8px;height:8px;border-radius:50%;background:var(--mut);animation:blink 1.2s infinite}
+.msg.typing span:nth-child(2){animation-delay:.2s}.msg.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.chat-quick{display:flex;flex-wrap:wrap;gap:8px;padding:4px 14px 10px}
+.quick-btn{background:rgba(245,185,66,.12);border:1px solid rgba(245,185,66,.5);color:var(--gold);border-radius:999px;padding:9px 15px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.quick-btn:active{transform:scale(.96)}
+.chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:#0e1830}
+.chat-input-row input{flex:1;background:#16264a;border:1px solid var(--line);border-radius:999px;padding:11px 16px;color:var(--txt);font-family:inherit;font-size:14px;outline:none}
+.chat-input-row input::placeholder{color:var(--mut)}
+.chat-input-row button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#23180a;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none}
+.chat-input-row button svg{width:20px;height:20px}
+.summary{background:#0e1830;border:1px solid rgba(245,185,66,.35);border-radius:14px;padding:14px;max-width:100%}
+.summary-title{font-size:11px;letter-spacing:.14em;color:var(--gold);font-weight:800;margin-bottom:10px}
+.summary dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin-bottom:10px}
+.summary dt{color:var(--mut)}.summary dd{color:var(--txt);font-weight:600}
+.summary-ok{color:#3ddc84;font-size:13.5px;font-weight:600;margin-top:6px}
+.restart-btn{margin-top:12px;background:none;border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:8px 16px;font-family:inherit;font-size:12.5px;cursor:pointer}
+@media(max-width:480px){.topbar-inner{padding:12px 14px}.brand-tag{display:none}.hero{padding:44px 16px 30px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="logo-mark" id="logoMark">B</span>
+      <div><div class="brand-name" id="brandName">Your Business</div><div class="brand-tag">AI Chatbot &mdash; free demo</div></div>
+    </div>
+    <button class="cta-btn" id="tryDemoBtn" type="button">Try the live demo</button>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="demo-badge">FREE DEMO</span>
+      <p class="hero-kicker" id="heroKicker">AI CHATBOT FOR YOUR BUSINESS</p>
+      <h1>Never Miss Another <span class="hl">Customer.</span></h1>
+      <p class="subhead" id="heroSub">This is how an AI chatbot on <b id="heroBiz">your</b> website could greet customers, answer questions and book jobs &mdash; 24/7, even at 2am.</p>
+      <ul class="bullets">
+        <li><span class="tick">&#10003;</span>Replies instantly, day or night</li>
+        <li><span class="tick">&#10003;</span>Captures every enquiry</li>
+        <li><span class="tick">&#10003;</span>Books jobs straight to you</li>
+      </ul>
+      <button class="cta-btn" id="heroDemoBtn" type="button">Try the live demo</button>
+      <p class="hero-note">Tap the gold bubble &mdash; the chatbot opens on its own in a few seconds.</p>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stats-inner">
+      <div class="stat"><p class="stat-big">After hours</p><p class="stat-small">is when most enquiries arrive &mdash; while you're on the job or asleep</p></div>
+      <div class="stat"><p class="stat-big">Fastest wins</p><p class="stat-small">the business that replies first usually wins the customer</p></div>
+      <div class="stat"><p class="stat-big">Zero staff needed</p><p class="stat-small">an AI chatbot works 24/7 without wages, sick days or holidays</p></div>
+    </div>
+  </section>
+  <section class="steps">
+    <div class="steps-inner">
+      <h2>How it works</h2>
+      <div class="step-grid">
+        <div class="step"><span class="step-num">1</span><p>Customer messages the website</p></div>
+        <div class="step"><span class="step-num">2</span><p>AI chatbot replies in seconds &amp; qualifies</p></div>
+        <div class="step"><span class="step-num">3</span><p>Job booked &mdash; you're notified instantly</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><p>Free demo &mdash; built for <span id="footBiz">your business</span></p></footer>
+<button class="chat-bubble" id="chatBubble" type="button" aria-label="Open the chatbot demo">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-5 4V4a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9" cy="9.5" r="1.2" fill="currentColor"/><circle cx="13" cy="9.5" r="1.2" fill="currentColor"/><circle cx="17" cy="9.5" r="1.2" fill="currentColor"/></svg>
+</button>
+<div class="chat-window" id="chatWindow" role="dialog" aria-label="Chatbot demo">
+  <div class="chat-header">
+    <span class="agent-avatar" id="agentAvatar">B</span>
+    <div class="agent-info"><p class="agent-name" id="agentName">Assistant</p><p class="agent-status"><span class="online-dot"></span>Online &mdash; replies instantly</p></div>
+    <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+  <div class="chat-quick" id="chatQuick"></div>
+  <form class="chat-input-row" id="chatForm" autocomplete="off">
+    <input type="text" id="chatInput" placeholder="Type your message&hellip;" aria-label="Type your message" maxlength="500">
+    <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24"><path d="M3 12l18-8-6 18-4-7-8-3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
+  </form>
+</div>
+<script>
+(function(){
+'use strict';
+/* ---------- personalization ---------- */
+function qp(n,d){var m=new RegExp('[?&]'+n+'=([^&]*)').exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g,' ')):d;}
+var BIZ=qp('b','Your Business').trim()||'Your Business';
+var TRADE=(qp('t','default').trim()||'default').toLowerCase();
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+var initial=(BIZ.trim()[0]||'B').toUpperCase();
+document.title='AI Chatbot demo for '+BIZ;
+document.getElementById('pageTitle').textContent='AI Chatbot demo for '+BIZ;
+document.getElementById('brandName').textContent=BIZ;
+document.getElementById('logoMark').textContent=initial;
+document.getElementById('heroKicker').textContent='AI CHATBOT FOR '+BIZ.toUpperCase();
+document.getElementById('heroBiz').textContent=BIZ;
+document.getElementById('footBiz').textContent=BIZ;
+document.getElementById('agentAvatar').textContent=initial;
+document.getElementById('agentName').textContent=BIZ+' Assistant';
+/* ---------- trade configs ---------- */
+var TRADES={
+ plumber:{q:['Get a quote','Emergency call-out','Opening hours'],hours:'Mon\u2013Fri 7am\u20135pm \u00b7 Sat 8am\u201312pm \u00b7 Sun closed',emg:'Burst pipe or flooding? Leave your number and we\u2019ll ring you back within minutes.'},
+ electrician:{q:['Get a quote','Emergency call-out','Opening hours'],hours:'Mon\u2013Fri 7am\u20135pm \u00b7 Sat 8am\u201312pm \u00b7 Sun closed',emg:'Power out or sparking? Leave your number and we\u2019ll ring you back within minutes.'},
+ handyman:{q:['Get a quote','Book a job','Opening hours'],hours:'Mon\u2013Fri 8am\u20135pm \u00b7 Sat by appointment'},
+ cleaner:{q:['Get a quote','Book a clean','Opening hours'],hours:'Mon\u2013Sat 7am\u20136pm \u00b7 Sun closed'},
+ gardener:{q:['Get a quote','Book a visit','Opening hours'],hours:'Mon\u2013Fri 7am\u20134pm \u00b7 Sat 8am\u201312pm'},
+ salon:{q:['Book appointment','Price list','Opening hours'],hours:'Tue\u2013Sat 9am\u20135:30pm \u00b7 Sun\u2013Mon closed',price:'Cut & finish from $45 \u00b7 Colour from $90 \u00b7 Treatments from $35.'},
+ massage:{q:['Book appointment','Price list','Opening hours'],hours:'Mon\u2013Sat 9am\u20136pm \u00b7 Sun 10am\u20132pm',price:'60-min massage $95 \u00b7 90-min $135.'},
+ agent:{q:['Book a viewing','Free appraisal','Opening hours'],hours:'Mon\u2013Fri 9am\u20135:30pm \u00b7 Sat 9am\u20132pm'},
+ photographer:{q:['Get a quote','View packages','Opening hours'],hours:'By appointment, 7 days',price:'Portrait session from $250 \u00b7 Events from $600.'},
+ driving:{q:['Book a lesson','Prices','Opening hours'],hours:'Mon\u2013Sat 7am\u20137pm',price:'Single lesson $75 \u00b7 5-lesson pack $340.'},
+ petgroomer:{q:['Book grooming','Price list','Opening hours'],hours:'Tue\u2013Sat 8:30am\u20134:30pm',price:'Full groom from $70 \u00b7 Bath & tidy from $45.'},
+ cafe:{q:['See menu','Book a table','Opening hours'],hours:'Mon\u2013Fri 6:30am\u20133pm \u00b7 Sat\u2013Sun 7am\u20132pm',price:'All-day brekky till 11:30am \u00b7 Lunch from $16.'},
+ 'default':{q:['Get a quote','Opening hours','Contact us'],hours:'Mon\u2013Fri 9am\u20135pm'}
+};
+var T=TRADES[TRADE]||TRADES['default'];
+/* ---------- chat engine ---------- */
+var msgsEl=document.getElementById('chatMessages'),quickEl=document.getElementById('chatQuick'),
+form=document.getElementById('chatForm'),input=document.getElementById('chatInput'),
+bubble=document.getElementById('chatBubble'),win=document.getElementById('chatWindow'),
+closeBtn=document.getElementById('chatClose');
+var state={step:'start',need:null,name:null,phone:null,day:null};
+var started=false,chatOpen=false,awaitingQuick=false;
+function scrollDown(){msgsEl.scrollTop=msgsEl.scrollHeight;}
+function addMsg(t,who){var d=document.createElement('div');d.className='msg '+who;d.textContent=t;msgsEl.appendChild(d);scrollDown();}
+function botSay(t){return new Promise(function(res){var x=document.createElement('div');x.className='msg bot typing';x.innerHTML='<span></span><span></span><span></span>';msgsEl.appendChild(x);scrollDown();setTimeout(function(){x.remove();addMsg(t,'bot');res();},800+Math.random()*700);});}
+function setQuick(labels){quickEl.innerHTML='';labels.forEach(function(l){var b=document.createElement('button');b.type='button';b.className='quick-btn';b.textContent=l;b.onclick=function(){addMsg(l,'user');quickEl.innerHTML='';awaitingQuick=false;handle(l);};});awaitingQuick=labels.length>0;scrollDown();}
+function ask(t,labels){return botSay(t).then(function(){if(labels)setQuick(labels);});}
+function mainMenu(){setQuick(T.q);}
+function handle(label){
+ var l=label.toLowerCase();
+ if(state.step==='need'){state.need=label;state.step='name';ask('Got it. What\u2019s your name?');return;}
+ if(state.step==='name'){state.name=label;state.step='phone';ask('And your mobile number, so '+BIZ+' can reach you?');return;}
+ if(state.step==='phone'){var d=label.replace(/\D/g,'');if(d.length>=7){state.phone=label;state.step='done';finale();}else{ask('That number looks a bit short \u2014 could you double-check it?');}return;}
+ if(state.step==='day'){state.day=label;state.step='name';ask('Great \u2014 '+label+' it is. What\u2019s your name?');return;}
+ if(l.indexOf('quote')>-1||l.indexOf('package')>-1||l.indexOf('price')>-1||l.indexOf('menu')>-1){
+   if(T.price){botSay(T.price).then(function(){state.step='need';ask('What would you like?');});}
+   else{state.step='need';ask('Sure \u2014 what do you need help with?');}return;}
+ if(l.indexOf('hour')>-1||l.indexOf('availab')>-1){botSay('We\u2019re open '+T.hours+'.').then(function(){ask('Anything else I can help with?',T.q);});return;}
+ if(l.indexOf('emergency')>-1||l.indexOf('call-out')>-1){state.step='phone';state.emg=true;ask(T.emg||'Urgent? Leave your number and we\u2019ll call you straight back.');return;}
+ if(l.indexOf('book')>-1||l.indexOf('appointment')>-1||l.indexOf('viewing')>-1||l.indexOf('lesson')>-1||l.indexOf('table')>-1||l.indexOf('appraisal')>-1){state.step='day';ask('When suits you?', ['Today','Tomorrow','This weekend']);return;}
+ if(l.indexOf('contact')>-1){botSay('You can reach '+BIZ+' right here \u2014 just leave your number and we\u2019ll call you back.').then(function(){state.step='phone';ask('What\u2019s the best number?');});return;}
+ botSay('Got it \u2014 I\u2019ll pass that on to '+BIZ+'.').then(function(){ask('Anything else?',T.q);});
+}
+function finale(){
+ var extra=state.emg?'We\u2019ll call you back within minutes.':(BIZ+' will be in touch shortly.');
+ botSay('Thanks '+state.name+'! '+extra).then(function(){ask('Anything else?',T.q);state.emg=false;state.step='start';});
+}
+function startFlow(){if(started)return;started=true;ask('Hi! Thanks for messaging '+BIZ+' \uD83D\uDC4B How can I help you today?',T.q);}
+function openChat(){win.classList.add('open');chatOpen=true;bubble.classList.remove('pulse');startFlow();setTimeout(scrollDown,60);}
+function closeChat(){win.classList.remove('open');chatOpen=false;}
+bubble.addEventListener('click',function(){chatOpen?closeChat():openChat();});
+closeBtn.addEventListener('click',closeChat);
+document.getElementById('tryDemoBtn').addEventListener('click',openChat);
+document.getElementById('heroDemoBtn').addEventListener('click',openChat);
+form.addEventListener('submit',function(e){e.preventDefault();var v=input.value.trim();if(!v)return;input.value='';addMsg(v,'user');
+ if(state.step==='done'){botSay('Noted!').then(function(){mainMenu();state.step='start';});return;}
+ if(awaitingQuick){botSay('Could you tap one of the options above so I book you in correctly?');return;}
+ handle(v);});
+setTimeout(function(){if(!chatOpen){bubble.classList.add('pulse');openChat();}},4000);
+})();
+</script>
+</body>
+</html>
